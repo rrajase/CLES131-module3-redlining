@@ -1,0 +1,48 @@
+---
+title: "Module 3: Redlining"
+format: html
+editor: visual
+---
+
+```{r}
+#| warning: false
+#| output-location: false
+library(tidyverse)
+```
+
+## Ecological consequences of redlining
+
+In August 2020, [Christopher Schell](https://cjschell.com/about) and collegues published a review in *Science* on ['The ecological and evolutionary consequences of systemic racism in urban environments'](https://science.sciencemag.org/content/early/2020/08/12/science.aay4497) showing how systematic racism and classism has significant impacts on ecological and evolutionary processes within urban environments. Here, we combine spatial data to reproduce and extend an analysis from the paper.
+
+## The data
+
+We will use a vector dataset of redlining maps from [Mapping Inequality](), a project led by [Robert K. Nelson](https://americanstudies.richmond.edu/faculty/rnelson2/).
+
+We will also be calculating NDVI from the European Space Agency's Sentinel-2 Mission, specifically bands B4 (red) and B8 (near infrared). There are multiple steps to importing the data, so please get an early start.
+
+ - Click "Explore Sentinel-2 data" on this [page](https://dataspace.copernicus.eu/data-collections/copernicus-sentinel-data/sentinel-2) and create a login account
+ - In the explorer, make sure Sentinel-2 L2A is selected (Level 2A)
+ - Scroll and zoom to the city of choice
+ - Set a threshold for cloud cover and select a date that reasonably approximates peak greenness. You may have to test multiple options to locate it, and not all cities will have the same date
+ - Once the displayed images looks satisfactory, click "Find products for current view"
+ - Check the desired product and download. It will take a while because the files are large
+ 
+The data will be packaged as a zipped SAFE file. You may need to investigate the properties of the file and give permission to open. Once unzipped, you will find:
+ - The images are jpeg2000 files nested within the GRANULE subfolder
+ - Multiple resolutions and bands are avalailable
+ - Metadata is provided in `MTD_MSIL2A.xml`
+
+For each city, save the highest resolution (10 m) files for the B4 and B8 bands along with associated metadata in `data/city_name/` within this project. You will ultimately have 5 subfolders within your `data/` folder. Because the files are large, make sure to add `data/` to the .gitignore file. 
+
+```{r}
+1 + 1
+```
+
+You can add options to executable code like this
+
+```{r}
+#| echo: false
+2 * 2
+```
+
+The `echo: false` option disables the printing of code (only output is displayed).
