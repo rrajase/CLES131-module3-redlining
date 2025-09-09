@@ -14,6 +14,14 @@ library(tidyterra) #tidyverse methods for terra objects
 library(ggplot2)
 ```
 
+## Team members, etc
+List your team member(s):
+
+Include a link to your forked GH repository:
+
+Include a link to your .qmd file:
+
+
 # Ecological consequences of redlining
 
 In August 2020, [Christopher Schell](https://cjschell.com/about) and collegues published a review in *Science* on ['The ecological and evolutionary consequences of systemic racism in urban environments'](https://science.sciencemag.org/content/early/2020/08/12/science.aay4497) showing how systematic racism and classism has significant impacts on ecological and evolutionary processes within urban environments. Here, we combine spatial data to reproduce and extend an analysis from the paper.
