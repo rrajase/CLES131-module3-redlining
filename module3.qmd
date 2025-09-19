@@ -1,7 +1,7 @@
 ---
 title: "Module 3: Redlining"
 format: pdf
-editor: visual
+editor: source
 editor_options: 
   chunk_output_type: console
 ---
@@ -14,13 +14,13 @@ library(tidyterra) #tidyverse methods for terra objects
 library(ggplot2)
 ```
 
-## Team members, etc
-List your team member(s):
+### Use of GitHub
 
-Include a link to your forked GH repository:
+Link to your forked GH repository:
 
-Include a link to your .qmd file:
+### Use of Quarto
 
+Link to your .qmd file:
 
 # Ecological consequences of redlining
 
@@ -83,8 +83,8 @@ Extract the mean, median, and central 95% quantile of NDVI from each delineated 
 ### Bonus 1 (1 point)
 Perform a statistical test to support your visual analysis above. 
 
-### Q8 (2 point)
-Create a final plot and describe whether NDVI is associated with historical redlining. Does this pattern differ between the five cities examined here? If so, how?
+### Q8 (2 points)
+Create a final plot and describe whether NDVI is associated with historical redlining. Does this pattern differ between the five cities examined here? If so, how? 
 
 ### Bonus 2 (1 point)
 Include the results of your statistical test in the final plot and use prose to incorporate statistical output in the context of the question above. 
