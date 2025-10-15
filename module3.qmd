@@ -11,7 +11,7 @@ editor_options:
 library(sf) # simple features for R
 library(terra) # spatial data analysis
 library(tidyterra) #tidyverse methods for terra objects
-library(ggplot2)
+library(tidyverse)
 ```
 
 ### Use of GitHub
@@ -40,13 +40,13 @@ Create a `data/` folder in the root of your project and create five subfolders l
 
 Then, go back to the home page of [Mapping Inequality](https://dsl.richmond.edu/panorama/redlining) and select 'Download the Data'. Use the search bar to select and download spatial data for each city. Move the geojson file into the associated data subfolder. 
 
-Import the geojson file into your R environment with the `read_sf`()` function from sf. Check the structure of this object and see that it is a special type of data frame, allowing it to be manipulated with many of the functions you already know, including ggplot. 
+Import the geojson file into your R environment with the `st_read`()` function from sf. Check the structure of this object and see that it is a special type of data frame, allowing it to be manipulated with many of the functions you already know, including ggplot. 
 
 Make a quick plot of your first city showing the "grade" in color using ggplot syntax and `geom_sf()`. Select a color scheme that better comports with redlining. 
 
 ## The raster data
 
-We will also be calculating NDVI from the European Space Agency's Sentinel-2 Mission, specifically bands B4 (red) and B8 (near infrared). There are multiple steps to importing the data, which itself takes a long time, so please get an early start.
+We will also be calculating NDVI from the European Space Agency's [Sentinel-2 Mission](https://documentation.dataspace.copernicus.eu/Data/SentinelMissions/Sentinel2.html), specifically bands B4 (red) and B8 (near infrared). There are multiple steps to importing the data, which itself takes a long time, so please get an early start.
 
  - Click "Explore Sentinel-2 data" on this [page](https://dataspace.copernicus.eu/data-collections/copernicus-sentinel-data/sentinel-2) and create an account to login
  - In the explorer, make sure Sentinel-2 L2A is selected (Level 2A, atmospheric correction applied)
@@ -58,16 +58,20 @@ We will also be calculating NDVI from the European Space Agency's Sentinel-2 Mis
  
 The data will be packaged as a zipped SAFE file in your Downloads folder. You may need to investigate the properties of the file and click 'unblock' to give permission to open. Once unzipped, you will find:
  - The images are jpeg2000 files nested within the GRANULE and IMG_DATA subfolders
- - Multiple resolutions and bands are avalailable
+ - Multiple resolutions and bands are available
  - Metadata is provided in `MTD_MSIL2A.xml`
 
-For each city, copy the coarsest resolution files for the B04 and B08 bands along with associated metadata to `data/city_name/` within this project. 
+For each city, locate the 10m resolution files for the B04 and B08 bands along with associated metadata and copy them to `data/city_name/` within this project. 
 
 ### Q3 (1 point)
-Use the terra package and the `rast()` function to import the two bands, which are reported as digital numbers. Combine to calculate NDVI and display a quick plot of your first city. Since you have 5 cities to plot, how can you optimize these operations with a for loop? (Not necessary to actually do so.) 
+Use the terra package and the `rast()` function to import the two bands, which are reported as digital numbers. 
+Combine to calculate NDVI ($ (NIR - R) / (NIR + R)$) and display a quick plot of your first city. 
+
+### Bonus 1 (1 point)
+Since you have 5 cities to plot, can you optimize the same operations as Q3 with a for loop? 
 
 ### Q4 (1 point)
-Do the rasters and polygons share the same coordinate reference system? If not, project both into the same coordinate system and defend your choice. 
+Do the rasters and polygons share the same coordinate reference system? If not, project both into the same CRS and justify your choice. 
 
 ### Q5 (1 points)
 Overlay the projected vector file onto the projected NDVI for a single city using `tidyterra::geom_spatraster()` in addition to `geom_sf()`. Adjust the color scales and add a scale bar to approximate Fig. 2a of Schell et al. 2020. 
@@ -80,12 +84,12 @@ Now, let's examine the relationship between redlining and NDVI. Temporarily re-r
 
 Extract the mean, median, and central 95% quantile of NDVI from each delineated neighborhood while retaining the identity of the city. Perform your choice of at least two exploratory data visualizations utilizing different variables to evaluate this relationship and examine whether it differs between cities. 
 
-### Bonus 1 (1 point)
+### Bonus 2 (1 point)
 Perform a statistical test to support your visual analysis above. 
 
 ### Q8 (2 points)
 Create a final plot and describe whether NDVI is associated with historical redlining. Does this pattern differ between the five cities examined here? If so, how? 
 
-### Bonus 2 (1 point)
+### Bonus 3 (1 point)
 Include the results of your statistical test in the final plot and use prose to incorporate statistical output in the context of the question above. 
 
