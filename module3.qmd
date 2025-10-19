@@ -16,11 +16,11 @@ library(tidyverse)
 
 ### Use of GitHub
 
-Link to your forked GH repository:
+Link to your forked GH repository: https://github.com/rrajase/CLES131-module3-redlining#
 
 ### Use of Quarto
 
-Link to your .qmd file:
+Link to your .qmd file: https://github.com/rrajase/CLES131-module3-redlining/blob/main/module3.qmd
 
 # Ecological consequences of redlining
 
