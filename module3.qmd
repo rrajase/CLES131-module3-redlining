@@ -32,7 +32,13 @@ We will use a vector dataset of redlining maps from [Mapping Inequality](https:/
 
 ### Q1 (1 point)
 
-Click 'Explore the Maps' to look at some cities and neighborhoods you are familiar with. Who is the intended audience of this data science project, and how are the data used to communicate understanding, insight, and knowledge? Why is this effective?
+####Click 'Explore the Maps' to look at some cities and neighborhoods you are familiar with. Who is the intended audience of this data science project, and how are the data used to communicate understanding, insight, and knowledge? Why is this effective?
+
+The intended audience seems to be a general US audience who may be uneducated on the racial history of their neighborhoods, but want to learn more. 
+- Dramatic language --> purpose
+- Clear numbers + labels --> accessibility
+- Multiple large cities across US --> wider audience
+- included history --> context
 
 ### Q2 (1 point)
 
@@ -42,7 +48,24 @@ Then, go back to the home page of [Mapping Inequality](https://dsl.richmond.edu/
 
 Import the geojson file into your R environment with the `st_read`()` function from sf. Check the structure of this object and see that it is a special type of data frame, allowing it to be manipulated with many of the functions you already know, including ggplot. 
 
-Make a quick plot of your first city showing the "grade" in color using ggplot syntax and `geom_sf()`. Select a color scheme that better comports with redlining. 
+```{r}
+baltimore <- st_read(data.frame("data/baltimore_MD/geojson.json"))
+str(baltimore)
+```
+
+Make a quick plot of your first city showing the "grade" in color using ggplot syntax and `geom_sf()`. Select a color scheme that better comports with redlining.
+
+```{r}
+# Following this documentation: https://r-charts.com/spatial/maps-ggplot2/
+ggplot() +
+  geom_sf(data = baltimore,
+          color = "black", 
+          aes(fill = grade)) +
+  scale_fill_manual(values=c("green4", "steelblue3", "gold2", "red3", "grey59")) +
+  labs(title = "Baltimore",
+       subtitle = "WGS84")
+  
+```
 
 ## The raster data
 
