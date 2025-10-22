@@ -32,7 +32,7 @@ We will use a vector dataset of redlining maps from [Mapping Inequality](https:/
 
 ### Q1 (1 point)
 
-####Click 'Explore the Maps' to look at some cities and neighborhoods you are familiar with. Who is the intended audience of this data science project, and how are the data used to communicate understanding, insight, and knowledge? Why is this effective?
+Click 'Explore the Maps' to look at some cities and neighborhoods you are familiar with. Who is the intended audience of this data science project, and how are the data used to communicate understanding, insight, and knowledge? Why is this effective?
 
 The intended audience seems to be a general US audience who may be uneducated on the racial history of their neighborhoods, but want to learn more. 
 - Dramatic language --> purpose
@@ -86,12 +86,39 @@ The data will be packaged as a zipped SAFE file in your Downloads folder. You ma
 
 For each city, locate the 10m resolution files for the B04 and B08 bands along with associated metadata and copy them to `data/city_name/` within this project. 
 
+Done!
+
 ### Q3 (1 point)
 Use the terra package and the `rast()` function to import the two bands, which are reported as digital numbers. 
 Combine to calculate NDVI ($ (NIR - R) / (NIR + R)$) and display a quick plot of your first city. 
 
+```{r}
+# Following this post: https://stackoverflow.com/questions/66107977/reading-in-multiple-rasters-in-terra-package
+
+# Also this documentation: https://www.rdocumentation.org/packages/base/versions/3.6.2/topics/list.files
+
+fileList <- list.files("data/baltimore_MD", pattern = ".*jp2", full.names = TRUE)
+rasters <- rast(fileList)
+```
+
+```{r}
+# Referencing this tutorial: https://www.neonscience.org/resources/learning-hub/tutorials/plot-raster-data-r
+#NDVI <- 
+plot(rasters, main=c("B04","B08"))
+```
 ### Bonus 1 (1 point)
 Since you have 5 cities to plot, can you optimize the same operations as Q3 with a for loop? 
+
+```{r}
+cities <- c("birmingham_AL","indianapolis_IN","minneapolis_MN","phoenix_AX")
+for (c in cities){
+  path <- paste("data/", c, sep="") # https://stackoverflow.com/questions/7201341/how-can-two-strings-be-concatenated
+  fileList <- list.files(path, pattern = ".*jp2", full.names = TRUE)
+  rasters <- rast(fileList)
+  #NDVI <- 
+  plot(rasters, main=c("B04","B08"))
+}
+```
 
 ### Q4 (1 point)
 Do the rasters and polygons share the same coordinate reference system? If not, project both into the same CRS and justify your choice. 
