@@ -102,32 +102,163 @@ rasters <- rast(fileList)
 ```
 
 ```{r}
-# Referencing this tutorial: https://www.neonscience.org/resources/learning-hub/tutorials/plot-raster-data-r
-#NDVI <- 
-plot(rasters, main=c("B04","B08"))
+ggplot() +
+  geom_spatraster(data=rasters) +
+  labs(title = "Baltimore")
 ```
 ### Bonus 1 (1 point)
 Since you have 5 cities to plot, can you optimize the same operations as Q3 with a for loop? 
 
 ```{r}
-cities <- c("birmingham_AL","indianapolis_IN","minneapolis_MN","phoenix_AX")
+cities <- c("birmingham_AL","indianapolis_IN","minneapolis_MN","phoenix_AZ")
 for (c in cities){
   path <- paste("data/", c, sep="") # https://stackoverflow.com/questions/7201341/how-can-two-strings-be-concatenated
+  
   fileList <- list.files(path, pattern = ".*jp2", full.names = TRUE)
   rasters <- rast(fileList)
-  #NDVI <- 
-  plot(rasters, main=c("B04","B08"))
+  
+  ggplot() +
+    geom_spatraster(data=rasters) +
+    labs(title = c)
 }
 ```
 
 ### Q4 (1 point)
-Do the rasters and polygons share the same coordinate reference system? If not, project both into the same CRS and justify your choice. 
+Do the rasters and polygons share the same coordinate reference system? If not, project both into the same CRS and justify your choice.
+
+Both the rasters and polygons use the WGS 84 coordinate reference system.
 
 ### Q5 (1 points)
 Overlay the projected vector file onto the projected NDVI for a single city using `tidyterra::geom_spatraster()` in addition to `geom_sf()`. Adjust the color scales and add a scale bar to approximate Fig. 2a of Schell et al. 2020. 
 
+```{r}
+raster1 <- rast("data/baltimore_MD/T18SUJ_20251001T155111_B04_10m.jp2")
+raster2 <- rast("data/baltimore_MD/T18SUJ_20251001T155111_B08_10m.jp2")
+NDVI <- raster2/raster1
+```
+
+```{r}
+balt_extent <- ext(c(346000, 372000, 4335240, 4365040))
+NDVIBalt <- crop(NDVI, balt_extent)
+```
+
+```{r}
+library(ggnewscale) #https://stackoverflow.com/questions/59133345/two-color-scales-for-different-geoms
+
+baltimorePlot <- ggplot() +
+  geom_spatraster(data=NDVIBalt) +
+  scale_fill_gradient2(low = "grey70",
+                       high = "green4",
+                       na.value = "transparent") +
+  new_scale_fill() +
+  geom_sf(data=baltimore,
+          color = "grey50",
+          aes(fill=grade,
+              alpha=0.5)) +
+  scale_fill_manual(values=c("green3", "steelblue3", "gold2", "red3", "grey59")) +
+  labs(title = "Baltimore")
+```
+
 ### Q6 (1 point)
 Repeat the above for all 5 cities and add the city name. Explore the `cowplot` or `patchwork` packages to create a multi-panel figure. 
+
+```{r}
+birmingham <- st_read(data.frame("data/birmingham_AL/geojson.json"))
+```
+
+```{r}
+raster1 <- rast("data/birmingham_AL/T16SEC_20251020T162331_B04_10m.jp2")
+raster2 <- rast("data/birmingham_AL/T16SEC_20251020T162331_B08_10m.jp2")
+NDVI <- raster2/raster1
+```
+
+```{r}
+birm_extent <- ext(c(500980, 530780, 3695240, 3722240))
+NDVIBirm <- crop(NDVI, birm_extent)
+```
+
+```{r}
+birminghamPlot <- ggplot() +
+  geom_spatraster(data=NDVIBirm) +
+  scale_fill_gradient2(low = "grey70",
+                       high = "green4",
+                       na.value = "transparent") +
+  new_scale_fill() +
+  geom_sf(data=birmingham,
+          color = "grey50",
+          aes(fill=grade,
+              alpha=0.5)) +
+  scale_fill_manual(values=c("green3", "steelblue3", "gold2", "red3", "grey59")) +
+  labs(title = "Birmingham")
+```
+
+```{r}
+indianapolis <- st_read(data.frame("data/indianapolis_IN/geojson.json"))
+```
+
+```{r}
+raster1 <- rast("data/indianapolis_IN/T16TEK_20250928T162949_B04_10m.jp2")
+raster2 <- rast("data/indianapolis_IN/T16TEK_20250928T162949_B08_10m.jp2")
+NDVI <- raster2/raster1
+```
+
+```{r}
+ind_extent <- ext(c(558980, 585780, 4390200, 4420000))
+NDVIInd <- crop(NDVI, ind_extent)
+```
+
+```{r}
+indianapolisPlot <- ggplot() +
+  geom_spatraster(data=NDVIInd) +
+  scale_fill_gradient2(low = "grey70",
+                       high = "green4",
+                       na.value = "transparent") +
+  new_scale_fill() +
+  geom_sf(data=indianapolis,
+          color = "grey50",
+          aes(fill=grade,
+              alpha=0.5)) +
+  scale_fill_manual(values=c("green3", "steelblue3", "gold2", "red3", "grey59")) +
+  labs(title = "Indianapolis")
+```
+
+```{r}
+minneapolis <- st_read(data.frame("data/minneapolis_MN/geojson.json"))
+```
+
+```{r}
+raster1 <- rast("data/minneapolis_MN/T15TVK_20251010T171139_B04_10m.jp2")
+raster2 <- rast("data/minneapolis_MN/T15TVK_20251010T171139_B08_10m.jp2")
+NDVI <- raster2/raster1
+```
+
+```{r}
+minn_extent <- ext(c(470960, 490760, 4975040, 4980040))
+NDVIMinn <- crop(NDVI, minn_extent)
+```
+
+```{r}
+#minneapolisPlot <- 
+ggplot() +
+  geom_spatraster(data=NDVIMinn) +
+  scale_fill_gradient2(low = "grey70",
+                       high = "green4",
+                       na.value = "transparent") +
+  new_scale_fill() +
+  geom_sf(data=minneapolis,
+          color = "grey50",
+          aes(fill=grade,
+              alpha=0.5)) +
+  scale_fill_manual(values=c("green3", "steelblue3", "gold2", "red3", "grey59")) +
+  labs(title = "Minneapolis")
+```
+
+```{r}
+library(patchwork)
+
+(baltimorePlot | birminghamPlot | indianapolisPlot) /
+  (minneapolisPlot | phoenixPlot)
+```
 
 ### Q7 (2 points)
 Now, let's examine the relationship between redlining and NDVI. Temporarily re-read in your redlining polygons using `terra:::vect()`. You can use `terra:extract()` on these temporary polygons within `mutate()` on your original polygons read in with `read_sf()`. Because the output of `terra::extract()` is a data.frame, `dplyr::pull()` can be helpful. 
