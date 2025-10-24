@@ -233,13 +233,12 @@ NDVI <- raster2/raster1
 ```
 
 ```{r}
-minn_extent <- ext(c(470960, 490760, 4975040, 4980040))
+minn_extent <- ext(c(472960, 485760, 4970240, 4990040))
 NDVIMinn <- crop(NDVI, minn_extent)
 ```
 
 ```{r}
-#minneapolisPlot <- 
-ggplot() +
+minneapolisPlot <- ggplot() +
   geom_spatraster(data=NDVIMinn) +
   scale_fill_gradient2(low = "grey70",
                        high = "green4",
@@ -251,6 +250,36 @@ ggplot() +
               alpha=0.5)) +
   scale_fill_manual(values=c("green3", "steelblue3", "gold2", "red3", "grey59")) +
   labs(title = "Minneapolis")
+```
+
+```{r}
+phoenix <- st_read(data.frame("data/phoenix_AZ/geojson.json"))
+```
+
+```{r}
+raster1 <- rast("data/phoenix_AZ/T12SUC_20251018T181259_B04_10m.jp2")
+raster2 <- rast("data/phoenix_AZ/T12SUC_20251018T181259_B08_10m.jp2")
+NDVI <- raster2/raster1
+```
+
+```{r}
+ph_extent <- ext(c(395800, 405800, 3698240, 3708240))
+NDVIPh <- crop(NDVI, ph_extent)
+```
+
+```{r}
+phoenixPlot <- ggplot() +
+  geom_spatraster(data=NDVIPh) +
+  scale_fill_gradient2(low = "grey70",
+                       high = "green4",
+                       na.value = "transparent") +
+  new_scale_fill() +
+  geom_sf(data=phoenix,
+          color = "grey50",
+          aes(fill=grade,
+              alpha=0.5)) +
+  scale_fill_manual(values=c("green3", "steelblue3", "gold2", "red3", "grey59")) +
+  labs(title = "Phoenix")
 ```
 
 ```{r}
