@@ -289,6 +289,18 @@ Now, let's examine the relationship between redlining and NDVI. Temporarily re-r
 
 ```{r}
 # https://gis.stackexchange.com/questions/29118/how-to-find-the-average-raster-value-of-an-area-defined-by-a-shapefile-using-r
+
+shape <- st_as_sf(baltimore,
+                  coords=c("lon","lat"))
+
+mean_val <- terra::extract(x = NDVIBalt, y = shape, fun=mean) 
+```
+
+```{r}
+ggplot(mean_val, 
+       aes(x=ID, 
+           y=T18SUJ_20251001T155111_B08_10m)) + 
+  geom_point()
 ```
 
 Extract the mean, median, and central 95% quantile of NDVI from each delineated neighborhood while retaining the identity of the city. Perform your choice of at least two exploratory data visualizations utilizing different variables to evaluate this relationship and examine whether it differs between cities. 
