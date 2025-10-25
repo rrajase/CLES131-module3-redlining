@@ -38,11 +38,11 @@ The intended audience seems to be a general US audience who may be uneducated on
 
 ### Q2 (1 point)
 
-Create a `data/` folder in the root of your project and create five subfolders labeled with the city names from Fig. 2 of Schell et al. 2020. Because the spatial files will be large, add `data/` to the .gitignore file. 
+Create a `data/` folder in the root of your project and create five subfolders labeled with the city names from Fig. 2 of Schell et al. 2020. Because the spatial files will be large, add `data/` to the .gitignore file.
 
-Then, go back to the home page of [Mapping Inequality](https://dsl.richmond.edu/panorama/redlining) and select 'Download the Data'. Use the search bar to select and download spatial data for each city. Move the geojson file into the associated data subfolder. 
+Then, go back to the home page of [Mapping Inequality](https://dsl.richmond.edu/panorama/redlining) and select 'Download the Data'. Use the search bar to select and download spatial data for each city. Move the geojson file into the associated data subfolder.
 
-Import the geojson file into your R environment with the `st_read`()` function from sf. Check the structure of this object and see that it is a special type of data frame, allowing it to be manipulated with many of the functions you already know, including ggplot. 
+Import the geojson file into your R environment with the `st_read`()\` function from sf. Check the structure of this object and see that it is a special type of data frame, allowing it to be manipulated with many of the functions you already know, including ggplot.
 
 ```{r}
 baltimore <- st_read(data.frame("data/baltimore_MD/geojson.json"))
@@ -66,26 +66,23 @@ ggplot() +
 
 We will also be calculating NDVI from the European Space Agency's [Sentinel-2 Mission](https://documentation.dataspace.copernicus.eu/Data/SentinelMissions/Sentinel2.html), specifically bands B4 (red) and B8 (near infrared). There are multiple steps to importing the data, which itself takes a long time, so please get an early start.
 
- - Click "Explore Sentinel-2 data" on this [page](https://dataspace.copernicus.eu/data-collections/copernicus-sentinel-data/sentinel-2) and create an account to login
- - In the explorer, make sure Sentinel-2 L2A is selected (Level 2A, atmospheric correction applied)
- - Scroll and zoom to the city of choice
- - Use the polygon tool (upper right corner, hover over pentagon icon and select rectangle) to draw a bounding box. Adjust until the extent approximates those in Schell et al. 2020. Try selecting the "False color" layer to help diagnose features to include or exclude
- - Set a threshold for cloud cover and select a date that reasonably approximates peak greenness. You may have to test multiple options to locate it, and not all cities will have the same date
- - Once the displayed images looks satisfactory, click "Find products for current view"
- - Check the desired product and download. It will take a while because the files are large
- 
-The data will be packaged as a zipped SAFE file in your Downloads folder. You may need to investigate the properties of the file and click 'unblock' to give permission to open. Once unzipped, you will find:
- - The images are jpeg2000 files nested within the GRANULE and IMG_DATA subfolders
- - Multiple resolutions and bands are available
- - Metadata is provided in `MTD_MSIL2A.xml`
+-   Click "Explore Sentinel-2 data" on this [page](https://dataspace.copernicus.eu/data-collections/copernicus-sentinel-data/sentinel-2) and create an account to login
+-   In the explorer, make sure Sentinel-2 L2A is selected (Level 2A, atmospheric correction applied)
+-   Scroll and zoom to the city of choice
+-   Use the polygon tool (upper right corner, hover over pentagon icon and select rectangle) to draw a bounding box. Adjust until the extent approximates those in Schell et al. 2020. Try selecting the "False color" layer to help diagnose features to include or exclude
+-   Set a threshold for cloud cover and select a date that reasonably approximates peak greenness. You may have to test multiple options to locate it, and not all cities will have the same date
+-   Once the displayed images looks satisfactory, click "Find products for current view"
+-   Check the desired product and download. It will take a while because the files are large
 
-For each city, locate the 10m resolution files for the B04 and B08 bands along with associated metadata and copy them to `data/city_name/` within this project. 
+The data will be packaged as a zipped SAFE file in your Downloads folder. You may need to investigate the properties of the file and click 'unblock' to give permission to open. Once unzipped, you will find: - The images are jpeg2000 files nested within the GRANULE and IMG_DATA subfolders - Multiple resolutions and bands are available - Metadata is provided in `MTD_MSIL2A.xml`
+
+For each city, locate the 10m resolution files for the B04 and B08 bands along with associated metadata and copy them to `data/city_name/` within this project.
 
 Done!
 
 ### Q3 (1 point)
-Use the terra package and the `rast()` function to import the two bands, which are reported as digital numbers. 
-Combine to calculate NDVI ($ (NIR - R) / (NIR + R)$) and display a quick plot of your first city. 
+
+Use the terra package and the `rast()` function to import the two bands, which are reported as digital numbers. Combine to calculate NDVI (\$ (NIR - R) / (NIR + R)\$) and display a quick plot of your first city.
 
 ```{r}
 # Following this post: https://stackoverflow.com/questions/66107977/reading-in-multiple-rasters-in-terra-package
@@ -101,8 +98,10 @@ ggplot() +
   geom_spatraster(data=rasters) +
   labs(title = "Baltimore")
 ```
+
 ### Bonus 1 (1 point)
-Since you have 5 cities to plot, can you optimize the same operations as Q3 with a for loop? 
+
+Since you have 5 cities to plot, can you optimize the same operations as Q3 with a for loop?
 
 ```{r}
 cities <- c("birmingham_AL","indianapolis_IN","minneapolis_MN","phoenix_AZ")
@@ -119,12 +118,14 @@ for (c in cities){
 ```
 
 ### Q4 (1 point)
+
 Do the rasters and polygons share the same coordinate reference system? If not, project both into the same CRS and justify your choice.
 
 Both the rasters and polygons use the WGS 84 coordinate reference system.
 
 ### Q5 (1 points)
-Overlay the projected vector file onto the projected NDVI for a single city using `tidyterra::geom_spatraster()` in addition to `geom_sf()`. Adjust the color scales and add a scale bar to approximate Fig. 2a of Schell et al. 2020. 
+
+Overlay the projected vector file onto the projected NDVI for a single city using `tidyterra::geom_spatraster()` in addition to `geom_sf()`. Adjust the color scales and add a scale bar to approximate Fig. 2a of Schell et al. 2020.
 
 ```{r}
 raster1 <- rast("data/baltimore_MD/T18SUJ_20251001T155111_B04_10m.jp2")
@@ -155,7 +156,8 @@ baltimorePlot <- ggplot() +
 ```
 
 ### Q6 (1 point)
-Repeat the above for all 5 cities and add the city name. Explore the `cowplot` or `patchwork` packages to create a multi-panel figure. 
+
+Repeat the above for all 5 cities and add the city name. Explore the `cowplot` or `patchwork` packages to create a multi-panel figure.
 
 ```{r}
 birmingham <- st_read(data.frame("data/birmingham_AL/geojson.json"))
@@ -285,9 +287,10 @@ library(patchwork) # https://patchwork.data-imaginist.com/
 ```
 
 ### Q7 (2 points)
-Now, let's examine the relationship between redlining and NDVI. Temporarily re-read in your redlining polygons using `terra:::vect()`. You can use `terra:extract()` on these temporary polygons within `mutate()` on your original polygons read in with `read_sf()`. Because the output of `terra::extract()` is a data.frame, `dplyr::pull()` can be helpful. 
 
-Extract the mean, median, and central 95% quantile of NDVI from each delineated neighborhood while retaining the identity of the city. Perform your choice of at least two exploratory data visualizations utilizing different variables to evaluate this relationship and examine whether it differs between cities. 
+Now, let's examine the relationship between redlining and NDVI. Temporarily re-read in your redlining polygons using `terra:::vect()`. You can use `terra:extract()` on these temporary polygons within `mutate()` on your original polygons read in with `read_sf()`. Because the output of `terra::extract()` is a data.frame, `dplyr::pull()` can be helpful.
+
+Extract the mean, median, and central 95% quantile of NDVI from each delineated neighborhood while retaining the identity of the city. Perform your choice of at least two exploratory data visualizations utilizing different variables to evaluate this relationship and examine whether it differs between cities.
 
 ```{r}
 # https://gis.stackexchange.com/questions/29118/how-to-find-the-average-raster-value-of-an-area-defined-by-a-shapefile-using-r
@@ -344,10 +347,12 @@ ggplot(mean_val,
 ```
 
 ### Bonus 2 (1 point)
-Perform a statistical test to support your visual analysis above. 
+
+Perform a statistical test to support your visual analysis above.
 
 ### Q8 (2 points)
-Create a final plot and describe whether NDVI is associated with historical redlining. Does this pattern differ between the five cities examined here? If so, how? 
+
+Create a final plot and describe whether NDVI is associated with historical redlining. Does this pattern differ between the five cities examined here? If so, how?
 
 ```{r}
 baltBox <- ggplot(mean_val, 
@@ -537,7 +542,8 @@ phBox <- ggplot(mean_val,
   (minnBox | phBox)
 ```
 
-Looking at our plots, it is very clear that NDVI is affected by historic redlining. In each city, the higher rated A and B neighborhoods have the most vegetation, and (with the exception of Birmingham) the lowest rated D neighborhoods have the least. While there may be some overlapping values. Each city has their highest vegetation in an A graded neighborhoos, and the lowest value in a D neighborhood.
+Looking at our plots, it is very clear that NDVI is affected by historic redlining. In each city, the higher rated A and B neighborhoods have the most vegetation, and (with the exception of Birmingham) the lowest rated D neighborhoods have the least. While there may be some overlapping values. Each city has their highest vegetation in an A graded neighborhoods, and the lowest value in a D neighborhood.
 
 ### Bonus 3 (1 point)
-Include the results of your statistical test in the final plot and use prose to incorporate statistical output in the context of the question above. 
+
+Include the results of your statistical test in the final plot and use prose to incorporate statistical output in the context of the question above.
