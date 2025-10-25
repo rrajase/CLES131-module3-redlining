@@ -34,11 +34,7 @@ We will use a vector dataset of redlining maps from [Mapping Inequality](https:/
 
 Click 'Explore the Maps' to look at some cities and neighborhoods you are familiar with. Who is the intended audience of this data science project, and how are the data used to communicate understanding, insight, and knowledge? Why is this effective?
 
-The intended audience seems to be a general US audience who may be uneducated on the racial history of their neighborhoods, but want to learn more. 
-- Dramatic language --> purpose
-- Clear numbers + labels --> accessibility
-- Multiple large cities across US --> wider audience
-- included history --> context
+The intended audience seems to be a general US audience who may be uneducated on the racial history of their neighborhoods, but want to learn more. I say general audience as there is a number of examples of dramatic language, an effective way to draw in a general reader. The data is also presented very clearly through labeling, making the data accessible. I also say US audience as there is data from multiple large cities across the US. The included history and records also provides needed context for the data.
 
 ### Q2 (1 point)
 
@@ -56,7 +52,6 @@ str(baltimore)
 Make a quick plot of your first city showing the "grade" in color using ggplot syntax and `geom_sf()`. Select a color scheme that better comports with redlining.
 
 ```{r}
-# Following this documentation: https://r-charts.com/spatial/maps-ggplot2/
 ggplot() +
   geom_sf(data = baltimore,
           color = "black", 
@@ -283,7 +278,7 @@ phoenixPlot <- ggplot() +
 ```
 
 ```{r}
-library(patchwork)
+library(patchwork) # https://patchwork.data-imaginist.com/
 
 (baltimorePlot | birminghamPlot | indianapolisPlot) /
   (minneapolisPlot | phoenixPlot)
@@ -291,6 +286,10 @@ library(patchwork)
 
 ### Q7 (2 points)
 Now, let's examine the relationship between redlining and NDVI. Temporarily re-read in your redlining polygons using `terra:::vect()`. You can use `terra:extract()` on these temporary polygons within `mutate()` on your original polygons read in with `read_sf()`. Because the output of `terra::extract()` is a data.frame, `dplyr::pull()` can be helpful. 
+
+```{r}
+# https://gis.stackexchange.com/questions/29118/how-to-find-the-average-raster-value-of-an-area-defined-by-a-shapefile-using-r
+```
 
 Extract the mean, median, and central 95% quantile of NDVI from each delineated neighborhood while retaining the identity of the city. Perform your choice of at least two exploratory data visualizations utilizing different variables to evaluate this relationship and examine whether it differs between cities. 
 
