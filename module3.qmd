@@ -287,23 +287,61 @@ library(patchwork) # https://patchwork.data-imaginist.com/
 ### Q7 (2 points)
 Now, let's examine the relationship between redlining and NDVI. Temporarily re-read in your redlining polygons using `terra:::vect()`. You can use `terra:extract()` on these temporary polygons within `mutate()` on your original polygons read in with `read_sf()`. Because the output of `terra::extract()` is a data.frame, `dplyr::pull()` can be helpful. 
 
+Extract the mean, median, and central 95% quantile of NDVI from each delineated neighborhood while retaining the identity of the city. Perform your choice of at least two exploratory data visualizations utilizing different variables to evaluate this relationship and examine whether it differs between cities. 
+
 ```{r}
 # https://gis.stackexchange.com/questions/29118/how-to-find-the-average-raster-value-of-an-area-defined-by-a-shapefile-using-r
 
 shape <- st_as_sf(baltimore,
                   coords=c("lon","lat"))
 
-mean_val <- terra::extract(x = NDVIBalt, y = shape, fun=mean) 
+shapeA <- shape |>
+  filter(grade =="A")
+mean_valA <- terra::extract(x = NDVIBalt, y = shapeA, fun=mean) 
+
+shapeB <- shape |>
+  filter(grade =="B")
+mean_valB <- terra::extract(x = NDVIBalt, y = shapeB, fun=mean) 
+
+shapeC <- shape |>
+  filter(grade =="C")
+mean_valC <- terra::extract(x = NDVIBalt, y = shapeC, fun=mean) 
+
+shapeD <- shape |>
+  filter(grade =="D")
+mean_valD <- terra::extract(x = NDVIBalt, y = shapeD, fun=mean) 
+```
+
+```{r}
+means <- c(mean_valA$T18SUJ_20251001T155111_B08_10m,mean_valB$T18SUJ_20251001T155111_B08_10m,mean_valC$T18SUJ_20251001T155111_B08_10m,mean_valD$T18SUJ_20251001T155111_B08_10m)
+A <- rep("A", times = length(mean_valA$T18SUJ_20251001T155111_B08_10m))
+B <- rep("B", times = length(mean_valB$T18SUJ_20251001T155111_B08_10m))
+C <- rep("C", times = length(mean_valC$T18SUJ_20251001T155111_B08_10m))
+D <- rep("D", times = length(mean_valD$T18SUJ_20251001T155111_B08_10m))
+grade <- c(A,B,C,D)
+
+mean_val <- data.frame(grade, means)
 ```
 
 ```{r}
 ggplot(mean_val, 
-       aes(x=ID, 
-           y=T18SUJ_20251001T155111_B08_10m)) + 
-  geom_point()
+       aes(x=grade, 
+           y=means)) + 
+  geom_point() +
+  labs(title="Baltimore",
+       subtitle="Mean NDVI in Each Neighborhood")
 ```
 
-Extract the mean, median, and central 95% quantile of NDVI from each delineated neighborhood while retaining the identity of the city. Perform your choice of at least two exploratory data visualizations utilizing different variables to evaluate this relationship and examine whether it differs between cities. 
+```{r}
+ggplot(mean_val, 
+       aes(x=grade, 
+           y=means,
+           fill=grade)) +
+  scale_fill_manual(values=c("green3", "steelblue3", "gold2", "red3")) + 
+  geom_boxplot() + 
+  labs(title="Baltimore",
+       subtitle="Mean NDVI in Each Neighborhood")
+```
 
 ### Bonus 2 (1 point)
 Perform a statistical test to support your visual analysis above. 
@@ -311,6 +349,195 @@ Perform a statistical test to support your visual analysis above.
 ### Q8 (2 points)
 Create a final plot and describe whether NDVI is associated with historical redlining. Does this pattern differ between the five cities examined here? If so, how? 
 
+```{r}
+baltBox <- ggplot(mean_val, 
+       aes(x=grade, 
+           y=means,
+           fill=grade)) +
+  scale_fill_manual(values=c("green3", "steelblue3", "gold2", "red3")) + 
+  geom_boxplot() + 
+  labs(title="Baltimore",
+       subtitle="Mean NDVI in Each Neighborhood")
+```
+
+```{r}
+shape <- st_as_sf(birmingham,
+                  coords=c("lon","lat"))
+
+shapeA <- shape |>
+  filter(grade =="A")
+mean_valA <- terra::extract(x = NDVIBirm, y = shapeA, fun=mean) 
+
+shapeB <- shape |>
+  filter(grade =="B")
+mean_valB <- terra::extract(x = NDVIBirm, y = shapeB, fun=mean) 
+
+shapeC <- shape |>
+  filter(grade =="C")
+mean_valC <- terra::extract(x = NDVIBirm, y = shapeC, fun=mean) 
+
+shapeD <- shape |>
+  filter(grade =="D")
+mean_valD <- terra::extract(x = NDVIBirm, y = shapeD, fun=mean) 
+```
+
+```{r}
+means <- c(mean_valA$T16SEC_20251020T162331_B08_10m,mean_valB$T16SEC_20251020T162331_B08_10m,mean_valC$T16SEC_20251020T162331_B08_10m,mean_valD$T16SEC_20251020T162331_B08_10m)
+A <- rep("A", times = length(mean_valA$T16SEC_20251020T162331_B08_10m))
+B <- rep("B", times = length(mean_valB$T16SEC_20251020T162331_B08_10m))
+C <- rep("C", times = length(mean_valC$T16SEC_20251020T162331_B08_10m))
+D <- rep("D", times = length(mean_valD$T16SEC_20251020T162331_B08_10m))
+grade <- c(A,B,C,D)
+
+mean_val <- data.frame(grade, means)
+```
+
+```{r}
+birmBox <- ggplot(mean_val, 
+       aes(x=grade, 
+           y=means,
+           fill=grade)) +
+  scale_fill_manual(values=c("green3", "steelblue3", "gold2", "red3")) + 
+  geom_boxplot() + 
+  labs(title="Birmingham",
+       subtitle="Mean NDVI in Each Neighborhood")
+```
+
+```{r}
+shape <- st_as_sf(indianapolis,
+                  coords=c("lon","lat"))
+
+shapeA <- shape |>
+  filter(grade =="A")
+mean_valA <- terra::extract(x = NDVIInd, y = shapeA, fun=mean) 
+
+shapeB <- shape |>
+  filter(grade =="B")
+mean_valB <- terra::extract(x = NDVIInd, y = shapeB, fun=mean) 
+
+shapeC <- shape |>
+  filter(grade =="C")
+mean_valC <- terra::extract(x = NDVIInd, y = shapeC, fun=mean) 
+
+shapeD <- shape |>
+  filter(grade =="D")
+mean_valD <- terra::extract(x = NDVIInd, y = shapeD, fun=mean) 
+```
+
+```{r}
+means <- c(mean_valA$T16TEK_20250928T162949_B08_10m,mean_valB$T16TEK_20250928T162949_B08_10m,mean_valC$T16TEK_20250928T162949_B08_10m,mean_valD$T16TEK_20250928T162949_B08_10m)
+A <- rep("A", times = length(mean_valA$T16TEK_20250928T162949_B08_10m))
+B <- rep("B", times = length(mean_valB$T16TEK_20250928T162949_B08_10m))
+C <- rep("C", times = length(mean_valC$T16TEK_20250928T162949_B08_10m))
+D <- rep("D", times = length(mean_valD$T16TEK_20250928T162949_B08_10m))
+grade <- c(A,B,C,D)
+
+mean_val <- data.frame(grade, means)
+```
+
+```{r}
+indBox <- ggplot(mean_val, 
+       aes(x=grade, 
+           y=means,
+           fill=grade)) +
+  scale_fill_manual(values=c("green3", "steelblue3", "gold2", "red3")) + 
+  geom_boxplot() + 
+  labs(title="Indianapolis",
+       subtitle="Mean NDVI in Each Neighborhood")
+```
+
+```{r}
+shape <- st_as_sf(minneapolis,
+                  coords=c("lon","lat"))
+
+shapeA <- shape |>
+  filter(grade =="A")
+mean_valA <- terra::extract(x = NDVIMinn, y = shapeA, fun=mean) 
+
+shapeB <- shape |>
+  filter(grade =="B")
+mean_valB <- terra::extract(x = NDVIMinn, y = shapeB, fun=mean) 
+
+shapeC <- shape |>
+  filter(grade =="C")
+mean_valC <- terra::extract(x = NDVIMinn, y = shapeC, fun=mean) 
+
+shapeD <- shape |>
+  filter(grade =="D")
+mean_valD <- terra::extract(x = NDVIMinn, y = shapeD, fun=mean) 
+```
+
+```{r}
+means <- c(mean_valA$T15TVK_20251010T171139_B08_10m,mean_valB$T15TVK_20251010T171139_B08_10m,mean_valC$T15TVK_20251010T171139_B08_10m,mean_valD$T15TVK_20251010T171139_B08_10m)
+A <- rep("A", times = length(mean_valA$T15TVK_20251010T171139_B08_10m))
+B <- rep("B", times = length(mean_valB$T15TVK_20251010T171139_B08_10m))
+C <- rep("C", times = length(mean_valC$T15TVK_20251010T171139_B08_10m))
+D <- rep("D", times = length(mean_valD$T15TVK_20251010T171139_B08_10m))
+grade <- c(A,B,C,D)
+
+mean_val <- data.frame(grade, means)
+```
+
+```{r}
+minnBox <- ggplot(mean_val, 
+       aes(x=grade, 
+           y=means,
+           fill=grade)) +
+  scale_fill_manual(values=c("green3", "steelblue3", "gold2", "red3")) + 
+  geom_boxplot() + 
+  labs(title="Minneapolis",
+       subtitle="Mean NDVI in Each Neighborhood")
+```
+
+```{r}
+shape <- st_as_sf(phoenix,
+                  coords=c("lon","lat"))
+
+shapeA <- shape |>
+  filter(grade =="A")
+mean_valA <- terra::extract(x = NDVIPh, y = shapeA, fun=mean) 
+
+shapeB <- shape |>
+  filter(grade =="B")
+mean_valB <- terra::extract(x = NDVIPh, y = shapeB, fun=mean) 
+
+shapeC <- shape |>
+  filter(grade =="C")
+mean_valC <- terra::extract(x = NDVIPh, y = shapeC, fun=mean) 
+
+shapeD <- shape |>
+  filter(grade =="D")
+mean_valD <- terra::extract(x = NDVIPh, y = shapeD, fun=mean) 
+```
+
+```{r}
+means <- c(mean_valA$T12SUC_20251018T181259_B08_10m,mean_valB$T12SUC_20251018T181259_B08_10m,mean_valC$T12SUC_20251018T181259_B08_10m,mean_valD$T12SUC_20251018T181259_B08_10m)
+A <- rep("A", times = length(mean_valA$T12SUC_20251018T181259_B08_10m))
+B <- rep("B", times = length(mean_valB$T12SUC_20251018T181259_B08_10m))
+C <- rep("C", times = length(mean_valC$T12SUC_20251018T181259_B08_10m))
+D <- rep("D", times = length(mean_valD$T12SUC_20251018T181259_B08_10m))
+grade <- c(A,B,C,D)
+
+mean_val <- data.frame(grade, means)
+```
+
+```{r}
+phBox <- ggplot(mean_val, 
+       aes(x=grade, 
+           y=means,
+           fill=grade)) +
+  scale_fill_manual(values=c("green3", "steelblue3", "gold2", "red3")) + 
+  geom_boxplot() + 
+  labs(title="Phoenix",
+       subtitle="Mean NDVI in Each Neighborhood")
+```
+
+```{r}
+(baltBox | birmBox | indBox) /
+  (minnBox | phBox)
+```
+
+Looking at our plots, it is very clear that NDVI is affected by historic redlining. In each city, the higher rated A and B neighborhoods have the most vegetation, and (with the exception of Birmingham) the lowest rated D neighborhoods have the least. While there may be some overlapping values. Each city has their highest vegetation in an A graded neighborhoos, and the lowest value in a D neighborhood.
+
 ### Bonus 3 (1 point)
 Include the results of your statistical test in the final plot and use prose to incorporate statistical output in the context of the question above. 
-
